@@ -189,20 +189,6 @@
 
 
 
-
-.light {
-  --bg:#e2eca8;
-  --panel:#4d8b79;
-  --accent:#0d5e3b;
-  --text:#fff7f7;
-  --muted:#d5ddd2;
-  --soft:#a9b17b;
-  --ring:#885656;
-}
-
-
-
-
   </style>
 
 
@@ -234,7 +220,6 @@
 <!-- منوی کشویی -->
 <nav id="menuPanel" class="menu-panel">
   <button id="btnFeedback">نظر به برنامه</button>
-  <button id="btnTheme">تغییر تم</button>
   <button id="btnContact">ارتباط با ما</button>
   <button id="btnSupport">حمایت از برنامه</button>  
 <button id="btnAbout">درباره ما</button>
@@ -358,10 +343,6 @@
 
 
   <script>
-    
-    if(localStorage.getItem("theme") === "light"){
-  document.body.classList.add("light");
-}
 
     // ——— داده‌ها (بدون حذف محتوا) ———
     // توجه: متن‌ها همان ساختار نسخه‌ی شما را حفظ می‌کنند.
@@ -583,14 +564,6 @@ pauseBtn.onclick = () => audio.pause();
     document.getElementById(id).classList.remove('active');
   }
 
-document.getElementById("btnTheme").addEventListener("click", () => {
-  document.body.classList.toggle("light");
-
-  // ذخیره تم انتخابی
-  localStorage.setItem("theme", 
-    document.body.classList.contains("light") ? "light" : "dark"
-  );
-});
 
 
 function copyCard(){
