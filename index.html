@@ -1,663 +1,275 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بانک سرمایه‌گذاری صنایع معدنی | نمایش قیمت</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #D4AF37; /* رنگ طلایی */
-            --primary-dark: #B8860B;
-            --light-bg: #FAF9F6;
-            --white: #FFFFFF;
-            --green: #2E8B57;
-            --red: #C41E3A;
-            --text-dark: #333333;
-            --text-light: #666666;
-            --border-color: #E0E0E0;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: var(--light-bg);
-            color: var(--text-dark);
-            line-height: 1.6;
-            padding: 20px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23FAF9F6"/><path d="M0 0L100 100M100 0L0 100" stroke="%23D4AF37" stroke-width="0.5" opacity="0.1"/></svg>');
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        /* هدر سایت */
-        header {
-            background: linear-gradient(135deg, var(--white) 0%, #FFF9E6 100%);
-            border-radius: 12px;
-            padding: 25px 40px;
-            margin-bottom: 30px;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .logo i {
-            font-size: 2.8rem;
-            color: var(--primary-color);
-        }
-        
-        .logo h1 {
-            font-size: 1.8rem;
-            color: var(--primary-dark);
-            font-weight: 700;
-        }
-        
-        .logo p {
-            color: var(--text-light);
-            font-size: 0.95rem;
-            margin-top: 5px;
-        }
-        
-        .time-display {
-            background-color: var(--white);
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid var(--primary-color);
-        }
-        
-        .time-display #current-time {
-            font-weight: 600;
-            color: var(--primary-dark);
-            font-size: 1.2rem;
-        }
-        
-        .time-display p {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin-top: 3px;
-        }
-        
-        /* بخش محصولات */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-        
-        .product-card {
-            background-color: var(--white);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid var(--border-color);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-        }
-        
-        .product-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .product-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .product-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-        }
-        
-        .product-name h3 {
-            font-size: 1.4rem;
-            color: var(--text-dark);
-        }
-        
-        .product-name p {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin-top: 3px;
-        }
-        
-        .product-price {
-            text-align: left;
-        }
-        
-        .current-price {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-dark);
-        }
-        
-        .price-change {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            font-size: 0.95rem;
-            margin-top: 5px;
-        }
-        
-        .price-up {
-            color: var(--green);
-        }
-        
-        .price-down {
-            color: var(--red);
-        }
-        
-        .price-change i {
-            margin-left: 5px;
-        }
-        
-        .product-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .detail-item {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            border-right: 3px solid var(--primary-color);
-        }
-        
-        .detail-label {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            margin-bottom: 5px;
-        }
-        
-        .detail-value {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-        
-        /* انیمیشن تغییر قیمت */
-        @keyframes flash-green {
-            0% { background-color: var(--white); }
-            50% { background-color: rgba(46, 139, 87, 0.2); }
-            100% { background-color: var(--white); }
-        }
-        
-        @keyframes flash-red {
-            0% { background-color: var(--white); }
-            50% { background-color: rgba(196, 30, 58, 0.2); }
-            100% { background-color: var(--white); }
-        }
-        
-        .price-up-animation {
-            animation: flash-green 1s ease;
-        }
-        
-        .price-down-animation {
-            animation: flash-red 1s ease;
-        }
-        
-        /* بخش پایینی */
-        .info-box {
-            background-color: var(--white);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: var(--shadow);
-            margin-top: 20px;
-            border-top: 4px solid var(--primary-color);
-        }
-        
-        .info-box h3 {
-            color: var(--primary-dark);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .info-box p {
-            color: var(--text-light);
-            line-height: 1.8;
-        }
-        
-        .highlight {
-            color: var(--primary-dark);
-            font-weight: 600;
-        }
-        
-        /* فوتو */
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            color: var(--text-light);
-            font-size: 0.9rem;
-            border-top: 1px solid var(--border-color);
-        }
-        
-        .update-info {
-            display: inline-block;
-            background-color: rgba(212, 175, 55, 0.1);
-            padding: 8px 16px;
-            border-radius: 20px;
-            margin-top: 10px;
-            color: var(--primary-dark);
-        }
-        
-        /* دسکتاپ محور */
-        @media (max-width: 768px) {
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            header {
-                flex-direction: column;
-                gap: 20px;
-                text-align: center;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>به‌روزرسانی برنامه</title>
+  <style>
+    /* فونت فارسی وزیر (حالت طاها) – بومی و خوانا */
+    @font-face {
+      font-family: 'Vazir';
+      src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #e9f7e1 0%, #c8e6c9 100%);
+      font-family: 'Vazir', 'Tahoma', 'Helvetica', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      direction: rtl;
+      padding: 1rem;
+    }
+
+    .update-card {
+      max-width: 560px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 42px 42px 32px 32px;
+      box-shadow: 0 30px 50px rgba(0, 60, 0, 0.2), 0 10px 25px rgba(0, 40, 0, 0.15);
+      overflow: hidden;
+      border: 2px solid rgba(46, 125, 50, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .update-card:hover {
+      transform: scale(1.01);
+    }
+
+    /* بخش اصلی بالایی (اطلاع‌رسانی) */
+    .main-message {
+      background: #2e7d32;  /* سبز تیره و خوش‌رنگ */
+      color: white;
+      padding: 2.5rem 2.2rem 2.2rem 2.2rem;
+      text-align: center;
+      border-bottom: 4px solid #a5d6a7;
+    }
+
+    .icon-wrapper {
+      background: rgba(255, 255, 255, 0.2);
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.2rem auto;
+      backdrop-filter: blur(2px);
+      border: 2px dashed white;
+    }
+
+    .icon-wrapper svg {
+      width: 48px;
+      height: 48px;
+      filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1));
+    }
+
+    .main-message h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.8rem;
+      text-shadow: 0 2px 4px #1b5e20;
+    }
+
+    .main-message p {
+      font-size: 1.2rem;
+      line-height: 1.7;
+      opacity: 0.95;
+      max-width: 400px;
+      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.05);
+      padding: 0.7rem 1.2rem;
+      border-radius: 50px;
+      backdrop-filter: blur(1px);
+      border: 1px solid #81c784;
+    }
+
+    /* بخش پایینی (کادر میانبر با دو دکمه) */
+    .action-panel {
+      background: white;
+      padding: 2rem 1.8rem 2.2rem 1.8rem;
+      text-align: center;
+    }
+
+    .action-panel h3 {
+      color: #1b5e20;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1.8rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .action-panel h3:after {
+      content: '';
+      display: block;
+      width: 70%;
+      height: 3px;
+      background: #66bb6a;
+      margin: 0.5rem auto 0;
+      border-radius: 10px;
+    }
+
+    .store-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .store-btn {
+      flex: 1 1 200px;
+      min-width: 190px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 1rem 1.2rem;
+      border-radius: 60px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: white;
+      box-shadow: 0 8px 16px rgba(0, 60, 0, 0.25);
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+
+    .store-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 25px rgba(46, 125, 50, 0.45);
+      border-color: #f1f8e9;
+    }
+
+    .store-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 5px 10px rgba(0, 40, 0, 0.3);
+    }
+
+    /* دکمه بازار با رنگ نارنجی-سبز (رنگ رسمی کافه بازار) */
+    .bazaar-btn {
+      background: #3c8a3b;  /* سبز متمایل به رنگ بازار */
+      background: linear-gradient(135deg, #43a047, #2e7d32);
+    }
+
+    /* دکمه مایکت با رنگ بنفش-آبی (رنگ شاخص مایکت) */
+    .myket-btn {
+      background: #7b52ab;  /* بنفش مایکت */
+      background: linear-gradient(135deg, #8e6ab2, #6a3e9a);
+    }
+
+    /* لوگوهای درون دکمه (SVG ساده شده) */
+    .store-logo {
+      width: 32px;
+      height: 32px;
+      background: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+    }
+
+    .store-logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    /* بخش فوتر اختیاری (خیلی ساده) */
+    .soft-footer {
+      background: #c8e6c9;
+      padding: 0.9rem;
+      text-align: center;
+      color: #1e4a1e;
+      font-size: 0.9rem;
+      border-top: 1px solid #a5d6a7;
+    }
+
+    /* ریسپانسیو برای موبایل */
+    @media (max-width: 450px) {
+      .main-message h1 {
+        font-size: 1.7rem;
+      }
+      .main-message p {
+        font-size: 1rem;
+      }
+      .store-btn {
+        min-width: 100%;
+        padding: 0.9rem;
+      }
+      .icon-wrapper {
+        width: 70px;
+        height: 70px;
+      }
+      .icon-wrapper svg {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <i class="fas fa-university"></i>
-                <div>
-                    <h1>بانک سرمایه‌گذاری صنایع معدنی</h1>
-                    <p>سامانه نمایش لحظه‌ای قیمت مواد اولیه صنعتی</p>
-                </div>
-            </div>
-            <div class="time-display">
-                <div id="current-time">--:--:--</div>
-                <p>آخرین بروزرسانی: <span id="last-update">هم اکنون</span></p>
-            </div>
-        </header>
-        
-        <div class="products-grid">
-            <!-- محصول خاک رس -->
-            <div class="product-card" id="clay-card">
-                <div class="product-header">
-                    <div class="product-title">
-                        <div class="product-icon">
-                            <i class="fas fa-mountain"></i>
-                        </div>
-                        <div class="product-name">
-                            <h3>خاک رس</h3>
-                            <p>Clay - واحد: کیلوگرم</p>
-                        </div>
-                    </div>
-                    <div class="product-price">
-                        <div class="current-price" id="clay-price">150,000</div>
-                        <div class="price-change" id="clay-change">
-                            <span class="price-up">+0.00%</span>
-                            <i class="fas fa-arrow-up"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-details">
-                    <div class="detail-item">
-                        <div class="detail-label">قیمت قبلی</div>
-                        <div class="detail-value" id="clay-previous">150,000</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">تغییر قیمت</div>
-                        <div class="detail-value" id="clay-diff">0</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">بیشترین قیمت روز</div>
-                        <div class="detail-value" id="clay-high">150,000</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">کمترین قیمت روز</div>
-                        <div class="detail-value" id="clay-low">150,000</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- محصول سیلیس -->
-            <div class="product-card" id="silica-card">
-                <div class="product-header">
-                    <div class="product-title">
-                        <div class="product-icon">
-                            <i class="fas fa-gem"></i>
-                        </div>
-                        <div class="product-name">
-                            <h3>سیلیس</h3>
-                            <p>Silica - واحد: کیلوگرم</p>
-                        </div>
-                    </div>
-                    <div class="product-price">
-                        <div class="current-price" id="silica-price">150,000</div>
-                        <div class="price-change" id="silica-change">
-                            <span class="price-up">+0.00%</span>
-                            <i class="fas fa-arrow-up"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-details">
-                    <div class="detail-item">
-                        <div class="detail-label">قیمت قبلی</div>
-                        <div class="detail-value" id="silica-previous">150,000</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">تغییر قیمت</div>
-                        <div class="detail-value" id="silica-diff">0</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">بیشترین قیمت روز</div>
-                        <div class="detail-value" id="silica-high">150,000</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">کمترین قیمت روز</div>
-                        <div class="detail-value" id="silica-low">150,000</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- محصول رنگ -->
-            <div class="product-card" id="color-card">
-                <div class="product-header">
-                    <div class="product-title">
-                        <div class="product-icon">
-                            <i class="fas fa-palette"></i>
-                        </div>
-                        <div class="product-name">
-                            <h3>رنگ صنعتی</h3>
-                            <p>Industrial Color - واحد: لیتر</p>
-                        </div>
-                    </div>
-                    <div class="product-price">
-                        <div class="current-price" id="color-price">150,000</div>
-                        <div class="price-change" id="color-change">
-                            <span class="price-up">+0.00%</span>
-                            <i class="fas fa-arrow-up"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-details">
-                    <div class="detail-item">
-                        <div class="detail-label">قیمت قبلی</div>
-                        <div class="detail-value" id="color-previous">150,000</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">تغییر قیمت</div>
-                        <div class="detail-value" id="color-diff">0</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">بیشترین قیمت روز</div>
-                        <div class="detail-value" id="color-high">150,000</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">کمترین قیمت روز</div>
-                        <div class="detail-value" id="color-low">150,000</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="info-box">
-            <h3><i class="fas fa-info-circle"></i> نکات مهم</h3>
-            <p>• قیمت‌های نمایش داده شده به صورت <span class="highlight">شانسی و رندوم</span> بین ۱,۰۰۰ تا ۱۰۰,۰۰۰ تومان افزایش یا کاهش می‌یابند.</p>
-            <p>• بروزرسانی قیمت‌ها هر <span class="highlight">۳۰ ثانیه</span> انجام می‌شود، اما زمان تغییر هر محصول متفاوت است.</p>
-            <p>• هنگام افزایش قیمت، کادر محصول به رنگ <span class="highlight">سبز</span> و در صورت کاهش قیمت به رنگ <span class="highlight">قرمز</span> چشمک می‌زند.</p>
-            <p>• قیمت پایه تمامی محصولات <span class="highlight">۱۵۰,۰۰۰ تومان</span> در نظر گرفته شده است.</p>
-        </div>
-        
-        <footer>
-            <p>© ۲۰۲۳ بانک سرمایه‌گذاری صنایع معدنی - این صفحه یک ماکت نمایشی است و قیمت‌ها واقعی نمی‌باشند.</p>
-            <div class="update-info">
-                <i class="fas fa-sync-alt"></i>
-                <span>بروزرسانی بعدی: <span id="next-update">۳۰</span> ثانیه دیگر</span>
-            </div>
-        </footer>
+  <div class="update-card">
+    <!-- کادر اصلی اطلاع‌رسانی (بالا) -->
+    <div class="main-message">
+      <div class="icon-wrapper">
+        <!-- آیکون هشدار / بروزرسانی (SVG داخلی) -->
+        <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 19H22L12 2ZM12 7L17.53 17H6.47L12 7ZM13 13H11V15H13V13ZM13 9H11V11H13V9Z" fill="white"/>
+        </svg>
+      </div>
+      <h1>⚠️ نسخه قدیمی!</h1>
+      <p>شما از نسخه قدیمی برنامه استفاده می‌کنید. برای ادامه استفاده، باید برنامه را به‌روزرسانی کنید.</p>
     </div>
 
-    <script>
-        // داده‌های محصولات
-        const products = [
-            {
-                id: 'clay',
-                name: 'خاک رس',
-                basePrice: 150000,
-                currentPrice: 150000,
-                previousPrice: 150000,
-                highPrice: 150000,
-                lowPrice: 150000,
-                changePercent: 0,
-                changeAmount: 0,
-                updateInterval: null,
-                nextUpdate: 0
-            },
-            {
-                id: 'silica',
-                name: 'سیلیس',
-                basePrice: 150000,
-                currentPrice: 150000,
-                previousPrice: 150000,
-                highPrice: 150000,
-                lowPrice: 150000,
-                changePercent: 0,
-                changeAmount: 0,
-                updateInterval: null,
-                nextUpdate: 0
-            },
-            {
-                id: 'color',
-                name: 'رنگ صنعتی',
-                basePrice: 150000,
-                currentPrice: 150000,
-                previousPrice: 150000,
-                highPrice: 150000,
-                lowPrice: 150000,
-                changePercent: 0,
-                changeAmount: 0,
-                updateInterval: null,
-                nextUpdate: 0
-            }
-        ];
+    <!-- کادر میانبر پایین (دو دکمه دانلود) -->
+    <div class="action-panel">
+      <h3>📲 دریافت نسخه جدید</h3>
+      <div class="store-buttons">
+        <!-- دکمه بازار با لینک نمونه (کلیک → باز شدن در صفحه جدید) -->
+        <a href="https://cafebazaar.ir/app/ir.sample.app" target="_blank" rel="noopener noreferrer" class="store-btn bazaar-btn">
+          <span class="store-logo">
+            <!-- لوگوی ساده شده بازار (نشان‌واره شبیه کاسه) -->
+            <svg viewBox="0 0 24 24" fill="#43a047">
+              <circle cx="12" cy="12" r="10" fill="white" stroke="none"/>
+              <path d="M7 8L12 4L17 8L12 12L7 8Z" fill="#43a047"/>
+              <circle cx="12" cy="15" r="4" fill="#43a047"/>
+            </svg>
+          </span>
+          <span>دانلود از بازار</span>
+        </a>
 
-        // فرمت کردن عدد با جداکننده هزارگان
-        function formatNumber(num) {
-            return new Intl.NumberFormat('fa-IR').format(Math.round(num));
-        }
+        <!-- دکمه مایکت با لینک نمونه (کلیک → باز شدن در صفحه جدید) -->
+        <a href="https://myket.ir/app/ir.sample.app" target="_blank" rel="noopener noreferrer" class="store-btn myket-btn">
+          <span class="store-logo">
+            <!-- لوگوی ساده مایکت (حرف M و رنگ بنفش) -->
+            <svg viewBox="0 0 24 24" fill="#7b52ab">
+              <rect width="20" height="20" x="2" y="2" rx="4" fill="white" />
+              <path d="M6 7L10 12L6 17H9L13 12L9 7H6ZM15 7L19 12L15 17H18L22 12L18 7H15Z" fill="#6a3e9a"/>
+            </svg>
+          </span>
+          <span>دانلود از مایکت</span>
+        </a>
+      </div>
+    </div>
 
-        // محاسبه درصد تغییر
-        function calculateChangePercent(oldPrice, newPrice) {
-            return ((newPrice - oldPrice) / oldPrice) * 100;
-        }
-
-        // تولید عدد رندوم بین min و max
-        function getRandomChange(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
-
-        // به‌روزرسانی قیمت یک محصول
-        function updateProductPrice(product) {
-            // ذخیره قیمت قبلی
-            product.previousPrice = product.currentPrice;
-            
-            // تولید تغییر قیمت (بین 1000 تا 100000 افزایش یا کاهش)
-            const change = getRandomChange(1000, 100000);
-            const isPositive = Math.random() > 0.5;
-            
-            // اعمال تغییر
-            if (isPositive) {
-                product.currentPrice += change;
-            } else {
-                product.currentPrice -= change;
-            }
-            
-            // اطمینان از منفی نشدن قیمت
-            if (product.currentPrice < 1000) {
-                product.currentPrice = 1000;
-            }
-            
-            // محاسبه تغییرات
-            product.changeAmount = product.currentPrice - product.previousPrice;
-            product.changePercent = calculateChangePercent(product.previousPrice, product.currentPrice);
-            
-            // به‌روزرسانی بیشترین و کمترین قیمت
-            if (product.currentPrice > product.highPrice) {
-                product.highPrice = product.currentPrice;
-            }
-            
-            if (product.currentPrice < product.lowPrice) {
-                product.lowPrice = product.currentPrice;
-            }
-            
-            // به‌روزرسانی UI
-            updateProductUI(product);
-            
-            // ثبت زمان آخرین بروزرسانی
-            updateLastUpdateTime();
-            
-            // تنظیم زمان بروزرسانی بعدی (بین 30 تا 40 ثانیه بعد)
-            product.nextUpdate = 30000 + getRandomChange(0, 10000);
-            
-            // ریست تایمر
-            clearInterval(product.updateInterval);
-            product.updateInterval = setTimeout(() => updateProductPrice(product), product.nextUpdate);
-            
-            // به‌روزرسانی تایمر نمایشی
-            updateNextUpdateDisplay();
-        }
-
-        // به‌روزرسانی UI محصول
-        function updateProductUI(product) {
-            const priceElement = document.getElementById(`${product.id}-price`);
-            const changeElement = document.getElementById(`${product.id}-change`);
-            const previousElement = document.getElementById(`${product.id}-previous`);
-            const diffElement = document.getElementById(`${product.id}-diff`);
-            const highElement = document.getElementById(`${product.id}-high`);
-            const lowElement = document.getElementById(`${product.id}-low`);
-            const cardElement = document.getElementById(`${product.id}-card`);
-            
-            // به‌روزرسانی قیمت فعلی
-            priceElement.textContent = formatNumber(product.currentPrice);
-            
-            // به‌روزرسانی قیمت قبلی و تفاوت
-            previousElement.textContent = formatNumber(product.previousPrice);
-            diffElement.textContent = formatNumber(product.changeAmount);
-            
-            // به‌روزرسانی بیشترین و کمترین قیمت
-            highElement.textContent = formatNumber(product.highPrice);
-            lowElement.textContent = formatNumber(product.lowPrice);
-            
-            // به‌روزرسانی درصد تغییر
-            const changePercentFormatted = product.changePercent.toFixed(2);
-            const isPositive = product.changePercent >= 0;
-            
-            if (isPositive) {
-                changeElement.innerHTML = `<span class="price-up">+${changePercentFormatted}%</span><i class="fas fa-arrow-up"></i>`;
-                // انیمیشن سبز برای افزایش قیمت
-                cardElement.classList.remove('price-down-animation');
-                cardElement.classList.add('price-up-animation');
-            } else {
-                changeElement.innerHTML = `<span class="price-down">${changePercentFormatted}%</span><i class="fas fa-arrow-down"></i>`;
-                // انیمیشن قرمز برای کاهش قیمت
-                cardElement.classList.remove('price-up-animation');
-                cardElement.classList.add('price-down-animation');
-            }
-            
-            // حذف کلاس انیمیشن پس از پایان
-            setTimeout(() => {
-                cardElement.classList.remove('price-up-animation', 'price-down-animation');
-            }, 1000);
-        }
-
-        // به‌روزرسانی زمان آخرین بروزرسانی
-        function updateLastUpdateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('fa-IR');
-            document.getElementById('last-update').textContent = timeString;
-        }
-
-        // به‌روزرسانی نمایش تایمر
-        function updateNextUpdateDisplay() {
-            // پیدا کردن کمترین زمان باقیمانده تا بروزرسانی بعدی
-            const minNextUpdate = Math.min(...products.map(p => p.nextUpdate));
-            const secondsLeft = Math.ceil(minNextUpdate / 1000);
-            document.getElementById('next-update').textContent = secondsLeft;
-        }
-
-        // به‌روزرسانی زمان جاری
-        function updateCurrentTime() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('fa-IR');
-            document.getElementById('current-time').textContent = timeString;
-        }
-
-        // شروع تایمرهای بروزرسانی برای هر محصول
-        function startUpdateTimers() {
-            // شروع با تاخیرهای متفاوت برای هر محصول (بین 0 تا 10 ثانیه)
-            products.forEach(product => {
-                const initialDelay = getRandomChange(0, 10000);
-                product.nextUpdate = 30000 + initialDelay;
-                
-                setTimeout(() => {
-                    updateProductPrice(product);
-                }, initialDelay);
-            });
-        }
-
-        // تایمر برای نمایش زمان جاری
-        setInterval(updateCurrentTime, 1000);
-        updateCurrentTime();
-
-        // تایمر برای به‌روزرسانی نمایش تایمر
-        setInterval(updateNextUpdateDisplay, 1000);
-
-        // راه‌اندازی اولیه
-        document.addEventListener('DOMContentLoaded', function() {
-            // مقداردهی اولیه UI
-            products.forEach(product => {
-                updateProductUI(product);
-            });
-            
-            // شروع تایمرهای بروزرسانی
-            startUpdateTimers();
-            
-            // به‌روزرسانی زمان آخرین بروزرسانی
-            updateLastUpdateTime();
-        });
-    </script>
+    <!-- یک خط بسیار ساده و سبز (بدون مزاحمت) -->
+    <div class="soft-footer">
+      <span>✨ همیشه آخرین نسخه را داشته باشید ✨</span>
+    </div>
+  </div>
 </body>
-                            </html>
+</html>
